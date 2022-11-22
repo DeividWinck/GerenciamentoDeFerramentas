@@ -1,10 +1,16 @@
 from tkinter import *
 from tkinter import ttk
-
-
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import SimpleDocTemplate, Image
+import webbrowser
 import sqlite3
 
 root = Tk()
+
+    
 
 
 class FuncsFerr():
@@ -82,6 +88,7 @@ class FuncsFerr():
         self.conn.commit()
         self.desconecta_bd_ferramentas()
         self.limpar_ferramentas()
+
     def select_lista(self):
         self.listaFerr.delete(*self.listaFerr.get_children())
         self.conecta_bd_ferramentas()
@@ -90,6 +97,7 @@ class FuncsFerr():
             """)
         for i in lista:
             self.listaFerr.insert("", END, values=i)
+            print(i)
         self.desconecta_bd_ferramentas()
     
     def OnDoubleClick_Ferramentas(self, event):
@@ -99,7 +107,8 @@ class FuncsFerr():
         for n in self.listaFerr.selection():
             col1, col2, col3, col4, col5, col6,col7, col8, col9 = self.listaFerr.item(n, 'values')
             self.entry_codigo_consulta.insert(END, col1)
-            print()
+            print(self.listaFerr.selection())
+            print(col1, col2, col3, col4, col5, col6,col7, col8, col9)
 
     def exclui_ferramenta(self):
         self.codigo_consulta = self.entry_codigo_consulta.get()
@@ -110,6 +119,58 @@ class FuncsFerr():
         self.desconecta_bd_ferramentas()
         self.select_lista()
         self.entry_codigo_consulta.delete(0, END)
+
+
+
+class Relatorios_Ferramentas(FuncsFerr):
+    
+    def printFerramentas(self):
+        webbrowser.open('ferramentas.pdf')
+
+    def geraRelatorioFerramentas(self):
+        self.listaFerr.delete(*self.listaFerr.get_children())
+        self.conecta_bd_ferramentas()
+        self.c = canvas.Canvas("ferramentas.pdf")
+
+        self.c.setFont("Helvetica-Bold", 24)
+        self.c.drawString(200, 790, 'Relatório Ferramentas')
+
+
+        self.c.setFont("Helvetica-Bold", 8)
+        self.c.drawString(50-35, 700, 'Código')
+        self.c.drawString(90-35, 700, 'Descrição')
+        self.c.drawString(145-35, 700, 'Part Number')
+        self.c.drawString(215-35, 700, 'Fabricante')
+        self.c.drawString(275-35, 700, 'Voltagem')
+        self.c.drawString(330-35, 700, 'Tamanho')
+        self.c.drawString(380-35, 700, 'Unidade de Med')
+        self.c.drawString(450-35, 700, 'Tipo da Ferramenta')
+        self.c.drawString(530-35, 700, 'Material da Ferramenta')
+
+
+
+        lista = self.cursor.execute(""" SELECT cod, descFerr, partNum, fabricante,
+         voltagem, tamanho, uniMed, tipoFerr, matFerr FROM ferramentas
+            """)
+        b = 20
+        for i in lista:
+            self.listaFerr.insert("", END, values=i)
+            print(i)
+            self.c.drawString(50-30, 700-b, str(i[0]))
+            self.c.drawString(90-30, 700-b, str(i[1]))
+            self.c.drawString(145-30, 700-b, str(i[2]))
+            self.c.drawString(215-30, 700-b, str(i[3]))
+            self.c.drawString(275-30, 700-b, str(i[4]))
+            self.c.drawString(330-30, 700-b, str(i[5]))
+            self.c.drawString(380-30, 700-b, str(i[6]))
+            self.c.drawString(450-30, 700-b, str(i[7]))
+            self.c.drawString(530-30, 700-b, str(i[8]))
+            b+=20
+
+        self.c.showPage()
+        self.c.save()
+        self.printFerramentas()
+        self.desconecta_bd_ferramentas()
 
 
 
@@ -173,6 +234,8 @@ class FuncsTec():
         self.conn.commit()
         self.desconecta_bd_tecnicos()
         self.limpar_tecnicos()
+
+
     def select_lista_tecnicos(self):
         self.listaTec.delete(*self.listaTec.get_children())
         self.conecta_bd_tecnicos()
@@ -202,8 +265,53 @@ class FuncsTec():
         self.entry_CPF_consulta.delete(0, END)
 
 
+class Relatorios_Tecnicos(FuncsTec):
+    
+    def printtecnicos(self):
+        webbrowser.open('tecnicos.pdf')
 
-class Application(FuncsFerr, FuncsTec):
+    def geraRelatorioTecnicos(self):
+        self.listaTec.delete(*self.listaTec.get_children())
+        self.conecta_bd_tecnicos()
+        self.c = canvas.Canvas("tecnicos.pdf")
+
+        self.c.setFont("Helvetica-Bold", 24)
+        self.c.drawString(200, 790, 'Relatório tecnicos')
+
+
+        self.c.setFont("Helvetica-Bold", 8)
+        self.c.drawString(50-35, 700, 'CPF')
+        self.c.drawString(90-35, 700, 'Nome Completo')
+        self.c.drawString(145-35, 700, 'Telefone')
+        self.c.drawString(215-35, 700, 'Turno')
+        self.c.drawString(275-35, 700, 'Nome da Equipe')
+
+
+
+        lista = self.cursor.execute(""" SELECT cpf, nome, telefone, 
+        turno, nomeEquipe FROM tecnicos
+            """)
+        b = 20
+        for i in lista:
+            self.listaTec.insert("", END, values=i)
+            print(i)
+            self.c.drawString(50-30, 700-b, str(i[0]))
+            self.c.drawString(90-30, 700-b, str(i[1]))
+            self.c.drawString(145-30, 700-b, str(i[2]))
+            self.c.drawString(215-30, 700-b, str(i[3]))
+            self.c.drawString(275-30, 700-b, str(i[4]))
+            b+=20
+
+        self.c.showPage()
+        self.c.save()
+        self.printtecnicos()
+        self.desconecta_bd_tecnicos()
+
+
+
+
+
+class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
     def __init__(self):
         self.root = root
         self.tela()
@@ -393,17 +501,21 @@ class Application(FuncsFerr, FuncsTec):
         bt_conFerramentas = Button(self.conFerramentas, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                                          activeforeground="white",
                                          font=('verdana', 14, 'bold'))
-        bt_conFerramentas.place(relx=0.17, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_conFerramentas.place(relx=0.17, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_limpaCod = Button(self.conFerramentas, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                              activeforeground="white", command=self.limpaCodigo_ferramentas, font=('verdana', 14, 'bold'))
-        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_excluiFerr = Button(self.conFerramentas, text='Excluir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                              activeforeground="white", command=self.exclui_ferramenta, font=('verdana', 14, 'bold'))
-        bt_excluiFerr.place(relx=0.63, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_excluiFerr.place(relx=0.63, rely=0.1, relwidth=0.10, relheight=0.1)
         self.listaFerramentas()
         self.select_lista()
+
+        bt_imprime = Button(self.conFerramentas, text='Imprimir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                             activeforeground="white", command=self.geraRelatorioFerramentas, font=('verdana', 14, 'bold'))
+        bt_imprime.place(relx=0.86, rely=0.1, relwidth=0.10, relheight=0.1)
 
 
     def listaFerramentas(self):
@@ -508,17 +620,22 @@ class Application(FuncsFerr, FuncsTec):
         bt_conTecnicos = Button(self.conTecnicos, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                                          activeforeground="white",
                                          font=('verdana', 14, 'bold'))
-        bt_conTecnicos.place(relx=0.17, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_conTecnicos.place(relx=0.17, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_limpaCod = Button(self.conTecnicos, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                              activeforeground="white", command=self.limpaCodigo_tecnicos, font=('verdana', 14, 'bold'))
-        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_excluiTec = Button(self.conTecnicos, text='Excluir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                              activeforeground="white", command=self.exclui_tecnico, font=('verdana', 14, 'bold'))
-        bt_excluiTec.place(relx=0.63, rely=0.1, relwidth=0.20, relheight=0.1)
+        bt_excluiTec.place(relx=0.63, rely=0.1, relwidth=0.10, relheight=0.1)
         self.listaTecnicos()
         self.select_lista_tecnicos()
+
+        bt_imprime = Button(self.conTecnicos, text='Imprimir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                             activeforeground="white", command=self.geraRelatorioTecnicos, font=('verdana', 14, 'bold'))
+        bt_imprime.place(relx=0.86, rely=0.1, relwidth=0.10, relheight=0.1)
+    
 
 
     def listaTecnicos(self):
