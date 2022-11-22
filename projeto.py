@@ -1,13 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 
+
 import sqlite3
 
 root = Tk()
 
 
-class Funcs():
-    def limpar(self):
+class FuncsFerr():
+    def limpar_ferramentas(self):
         self.entry_tamanho.delete(0, END)
         self.entry_materialFerramenta.delete(0, END)
         self.entry_tipoFerramenta.delete(0, END)
@@ -33,18 +34,18 @@ class Funcs():
         a7 = self.entry_descricao.get()
         a8 = self.entry_fabricante.get()
         a9 = self.entry_voltagem.get()
-        self.limpar()
+        self.limpar_ferramentas()
 
-    def limpaCodigo(self):
+    def limpaCodigo_ferramentas(self):
         self.entry_codigo_consulta.delete(0, END)
 
-    def conecta_bd(self):
+    def conecta_bd_ferramentas(self):
         self.conn = sqlite3.connect("ferramentas.bd")
         self.cursor = self.conn.cursor(); print("Conectando ao banco de dados")
-    def desconecta_bd(self):
+    def desconecta_bd_ferramentas(self):
         self.conn.close(); print("Desconectando ao banco de dados")
-    def montaTabelas(self):
-        self.conecta_bd();
+    def montaTabelas_ferramentas(self):
+        self.conecta_bd_ferramentas();
         # Criar tabela
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS ferramentas (
@@ -60,7 +61,8 @@ class Funcs():
             );
         """)
         self.conn.commit(); print("Banco de dados criado")
-        self.desconecta_bd()
+        self.desconecta_bd_ferramentas()
+
     def add_ferramenta(self):
         self.codigo = self.entry_codigo.get()
         self.descricao = self.entry_descricao.get()
@@ -71,39 +73,150 @@ class Funcs():
         self.uniMed = self.entry_unidadeMedida.get()
         self.tipoFerr = self.entry_tipoFerramenta.get()
         self.matFerr = self.entry_materialFerramenta.get()
-        self.conecta_bd()
+        self.conecta_bd_ferramentas()
 
         self.cursor.execute(""" INSERT INTO ferramentas (descFerr, partNum, fabricante,
          voltagem, tamanho, uniMed, tipoFerr, matFerr)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", (self.descricao, self.partNum, self.fabricante, self.voltagem,
                                                  self.tamanho, self.uniMed, self.tipoFerr, self.matFerr))
         self.conn.commit()
-        self.desconecta_bd()
-        self.limpar()
+        self.desconecta_bd_ferramentas()
+        self.limpar_ferramentas()
     def select_lista(self):
         self.listaFerr.delete(*self.listaFerr.get_children())
-        self.conecta_bd()
+        self.conecta_bd_ferramentas()
         lista = self.cursor.execute(""" SELECT cod, descFerr, partNum, fabricante,
          voltagem, tamanho, uniMed, tipoFerr, matFerr FROM ferramentas
             """)
         for i in lista:
             self.listaFerr.insert("", END, values=i)
-        self.desconecta_bd()
+        self.desconecta_bd_ferramentas()
+    
+    def OnDoubleClick_Ferramentas(self, event):
+        self.entry_codigo_consulta.delete(0, END)
+        self.listaFerr.selection()
+
+        for n in self.listaFerr.selection():
+            col1, col2, col3, col4, col5, col6,col7, col8, col9 = self.listaFerr.item(n, 'values')
+            self.entry_codigo_consulta.insert(END, col1)
+            print()
+
+    def exclui_ferramenta(self):
+        self.codigo_consulta = self.entry_codigo_consulta.get()
+        # self.variaveis_ferramenta()
+        self.conecta_bd_ferramentas()
+        self.cursor.execute("""DELETE FROM ferramentas WHERE cod = ?""", (self.codigo_consulta))
+        self.conn.commit()
+        self.desconecta_bd_ferramentas()
+        self.select_lista()
+        self.entry_codigo_consulta.delete(0, END)
 
 
-class Application(Funcs):
+
+
+class FuncsTec():
+    def limpar_tecnicos(self):
+        self.entry_CPF.delete(0, END)
+        self.entry_nome.delete(0, END)
+        self.entry_telefone.delete(0, END)
+        self.entry_turno.delete(0, END)
+        self.entry_nomeEquipe.delete(0, END)
+
+    def restaurar(self):
+        self.frames_da_tela()
+        self.widgets_frame1()
+
+    def salvartecnicos(self):
+        global a1, a2, a3, a4, a5
+        a1 = self.entry_CPF.get()
+        a2 = self.entry_nome.get()
+        a3 = self.entry_telefone.get()
+        a4 = self.entry_turno.get()
+        a5 = self.entry_nomeEquipe.get()
+        self.limpar_tecnicos()
+
+    def limpaCodigo_tecnicos(self):
+        self.entry_CPF_consulta.delete(0, END)
+
+    def conecta_bd_tecnicos(self):
+        self.conn = sqlite3.connect("tecnicos.bd")
+        self.cursor = self.conn.cursor(); print("Conectando ao banco de dados - Técnicos")
+    def desconecta_bd_tecnicos(self):
+        self.conn.close(); print("Desconectando ao banco de dados - Técnicos")
+    def montaTabelas_tecnicos(self):
+        self.conecta_bd_tecnicos();
+        # Criar tabela
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS tecnicos (
+                cpf CHAR(11),
+                nome CHAR(40) NOT NULL,
+                telefone INTEGER(20),
+                turno CHAR(10),
+                nomeEquipe CHAR(30)
+            );
+        """)
+        self.conn.commit(); print("Banco de dados criado - Técnicos")
+        self.desconecta_bd_tecnicos()
+
+    def add_tecnico(self):
+        self.cpf = self.entry_CPF.get()
+        self.nome = self.entry_nome.get()
+        self.telefone = self.entry_telefone.get()
+        self.turno = self.entry_turno.get()
+        self.nomeEquipe = self.entry_nomeEquipe.get()
+        self.conecta_bd_tecnicos()
+
+        self.cursor.execute(""" INSERT INTO tecnicos (cpf, nome, telefone,
+         turno, nomeEquipe)
+            VALUES (?, ?, ?, ?, ?)""", (self.cpf, self.nome, self.telefone, self.turno,
+                                                 self.nomeEquipe))
+        self.conn.commit()
+        self.desconecta_bd_tecnicos()
+        self.limpar_tecnicos()
+    def select_lista_tecnicos(self):
+        self.listaTec.delete(*self.listaTec.get_children())
+        self.conecta_bd_tecnicos()
+        lista = self.cursor.execute(""" SELECT cpf, nome, telefone, 
+        turno, nomeEquipe FROM tecnicos
+            """)
+        for i in lista:
+            self.listaTec.insert("", END, values=i)
+        self.desconecta_bd_tecnicos()
+    
+    def OnDoubleClick_Tecnicos(self, event):
+        self.entry_CPF_consulta.delete(0, END)
+        self.listaTec.selection()
+
+        for n in self.listaTec.selection():
+            col1, col2, col3, col4, col5= self.listaTec.item(n, 'values')
+            self.entry_CPF_consulta.insert(END, col1)
+
+    def exclui_tecnico(self):
+        self.CPF_consulta = self.entry_CPF_consulta.get()
+        # self.variaveis_ferramenta()
+        self.conecta_bd_tecnicos()
+        self.cursor.execute("""DELETE FROM tecnicos WHERE cod = ?""", (self.CPF_consulta))
+        self.conn.commit()
+        self.desconecta_bd_tecnicos()
+        self.select_lista()
+        self.entry_CPF_consulta.delete(0, END)
+
+
+
+class Application(FuncsFerr, FuncsTec):
     def __init__(self):
         self.root = root
         self.tela()
         self.frames_da_tela()
         self.widgets_frame1()
-        self.montaTabelas()
+        self.montaTabelas_tecnicos()
+        self.montaTabelas_ferramentas()
 
 
         root.mainloop()
 
     def tela(self):
-        self.root.title("Gerenciador de Ferramentas")
+        self.root.title("Gerenciador de tecnicos")
         self.root.configure(background='#1e3743')
         self.root.geometry("900x600")
         self.root.resizable(True, True)
@@ -171,12 +284,14 @@ class Application(Funcs):
         # Botão Cadastrar Técnicos
         bt_cadastrarTecnico = Button(self.frame_2, text="Cadastrar Técnico", bd=4, fg='black',
                                      font=('verdana', 14, 'bold'),
-                                     bg='#00BFFF', activebackground='#2E9AFE', activeforeground="white")
+                                     bg='#00BFFF', activebackground='#2E9AFE', activeforeground="white",
+                                     command=self.cadastrar_tecnico)
         bt_cadastrarTecnico.place(relx=0.02, rely=0.1, relwidth=0.96, relheight=0.15)
         # Botão Consultar Técnicos
         bt_consultarTecnicos = Button(self.frame_2, text="Consultar Técnicos", bd=4, fg='black',
                                       font=('verdana', 14, 'bold'),
-                                      bg='#00BFFF', activebackground='#2E9AFE', activeforeground="white")
+                                      bg='#00BFFF', activebackground='#2E9AFE', activeforeground="white",
+                                      command=self.consultar_tecnico)
         bt_consultarTecnicos.place(relx=0.02, rely=0.27, relwidth=0.96, relheight=0.15)
         bt_x = Button(self.frame_2, text='X', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                       activeforeground="white", command=self.restaurar)
@@ -278,11 +393,15 @@ class Application(Funcs):
         bt_conFerramentas = Button(self.conFerramentas, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                                          activeforeground="white",
                                          font=('verdana', 14, 'bold'))
-        bt_conFerramentas.place(relx=0.17, rely=0.1, relwidth=0.30, relheight=0.1)
+        bt_conFerramentas.place(relx=0.17, rely=0.1, relwidth=0.20, relheight=0.1)
 
         bt_limpaCod = Button(self.conFerramentas, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
-                             activeforeground="white", command=self.limpaCodigo, font=('verdana', 14, 'bold'))
-        bt_limpaCod.place(relx=0.5, rely=0.1, relwidth=0.30, relheight=0.1)
+                             activeforeground="white", command=self.limpaCodigo_ferramentas, font=('verdana', 14, 'bold'))
+        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.20, relheight=0.1)
+
+        bt_excluiFerr = Button(self.conFerramentas, text='Excluir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                             activeforeground="white", command=self.exclui_ferramenta, font=('verdana', 14, 'bold'))
+        bt_excluiFerr.place(relx=0.63, rely=0.1, relwidth=0.20, relheight=0.1)
         self.listaFerramentas()
         self.select_lista()
 
@@ -317,7 +436,114 @@ class Application(Funcs):
         self.scroolLista = Scrollbar(self.conFerramentas, orient='vertical')
         self.listaFerr.configure(yscrollcommand=self.scroolLista.set)
         self.scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
+        self.listaFerr.bind("<Double-1>", self.OnDoubleClick_Ferramentas)
 
 
+    def cadastrar_tecnico(self):
+        self.restaurar()
+
+        bt_x = Button(self.frame_2, text='X', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                      activeforeground="white", command=self.restaurar)
+        bt_x.place(relx=0.96, rely=0, relwidth=0.04, relheight=0.04)
+
+        bt_salvar = Button(self.frame_2, text='Salvar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                           activeforeground="white", command=self.add_tecnico)
+        bt_salvar.place(relx=0.01, rely=0.53, relwidth=0.83, relheight=0.05)
+
+        lb_titulo = Label(self.frame_2, text="Cadastrar Técnico", bg='#dfe3ee', font=('verdana', 14))
+        lb_titulo.place(relx=0.01, rely=0.01)
+
+        lb_CPF = Label(self.frame_2, text="CPF", font=('verdana', 12), bg='#dfe3ee')
+        lb_CPF.place(relx=0.01, rely=0.1)
+        self.entry_CPF = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_CPF.place(relx=0.01, rely=0.16, relheight=0.04, relwidth=0.60)
+
+        lb_nome = Label(self.frame_2, text="Nome Completo", font=('verdana', 12), bg='#dfe3ee')
+        lb_nome.place(relx=0.01, rely=0.2)
+        self.entry_nome = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_nome.place(relx=0.01, rely=0.26, relheight=0.04, relwidth=0.85)
+
+        lb_telefone = Label(self.frame_2, text="Telefone celular ou rádio", font=('verdana', 12), bg='#dfe3ee')
+        lb_telefone.place(relx=0.01, rely=0.30)
+        self.entry_telefone = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_telefone.place(relx=0.01, rely=0.36, relheight=0.04, relwidth=0.50)
+
+        lb_turno = Label(self.frame_2, text="Turno", font=('verdana', 12), bg='#dfe3ee')
+        lb_turno.place(relx=0.66, rely=0.10)
+        uniTurno = ['Manhã','Tarde','Noite']
+        self.entry_turno = ttk.Combobox(self.frame_2, value=uniTurno)
+        self.entry_turno.place(relx=0.66, rely=0.16, relheight=0.04, relwidth=0.25)
+
+        lb_nomeEquipe = Label(self.frame_2, text="Nome da Equipe", font=('verdana', 12), bg='#dfe3ee')
+        lb_nomeEquipe.place(relx=0.01, rely=0.40)
+        self.entry_nomeEquipe = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_nomeEquipe.place(relx=0.01, rely=0.46, relheight=0.04, relwidth=0.50)
+
+
+    def consultar_tecnico(self):
+        self.tela2 = Tk()
+        self.tela2.title("Consultar Técnico")
+        self.tela2.configure(background='#1e3743')
+        self.tela2.geometry("1200x700")
+        self.tela2.resizable(True, True)
+        self.tela2.maxsize(width=1800, height=900)
+        self.tela2.minsize(width=900, height=600)
+
+        self.conTecnicos = Frame(self.tela2, bd=4, bg='#dfe3ee', highlightbackground='#759fe6',
+                             highlightthickness=2)
+        self.conTecnicos.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+
+        bt_x = Button(self.conTecnicos, text='X', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                      activeforeground="white", command= self.tela2.destroy)
+        bt_x.place(relx=0.96, rely=0, relwidth=0.04, relheight=0.04)
+
+        lb_titulo = Label(self.conTecnicos, text="Consultar Técnico", bg='#dfe3ee', font=('verdana', 14))
+        lb_titulo.place(relx=0.01, rely=0.01)
+
+        lb_CPF = Label(self.conTecnicos, text="CPF", font=('verdana', 12), bg='#dfe3ee')
+        lb_CPF.place(relx=0.01, rely=0.1)
+        self.entry_CPF_consulta = Entry(self.conTecnicos, fg='red', font=('verdana', 10))
+        self.entry_CPF_consulta.place(relx=0.01, rely=0.16, relheight=0.04, relwidth=0.14)
+
+        bt_conTecnicos = Button(self.conTecnicos, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                                         activeforeground="white",
+                                         font=('verdana', 14, 'bold'))
+        bt_conTecnicos.place(relx=0.17, rely=0.1, relwidth=0.20, relheight=0.1)
+
+        bt_limpaCod = Button(self.conTecnicos, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                             activeforeground="white", command=self.limpaCodigo_tecnicos, font=('verdana', 14, 'bold'))
+        bt_limpaCod.place(relx=0.4, rely=0.1, relwidth=0.20, relheight=0.1)
+
+        bt_excluiTec = Button(self.conTecnicos, text='Excluir', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
+                             activeforeground="white", command=self.exclui_tecnico, font=('verdana', 14, 'bold'))
+        bt_excluiTec.place(relx=0.63, rely=0.1, relwidth=0.20, relheight=0.1)
+        self.listaTecnicos()
+        self.select_lista_tecnicos()
+
+
+    def listaTecnicos(self):
+        self.listaTec = ttk.Treeview(self.conTecnicos, height=3, columns=("col1", "col2", "col3", "col4", "col5", "col6"))
+        self.listaTec.heading("#0", text="")
+        self.listaTec.heading("#1", text="CPF")
+        self.listaTec.heading("#2", text="Turno")
+        self.listaTec.heading("#3", text="Nome Completo")
+        self.listaTec.heading("#4", text="Telefone ou Rádio")
+        self.listaTec.heading("#5", text="Nome da Equipe")
+
+
+        self.listaTec.column("#0", width=0)
+        self.listaTec.column("#1", width=50)
+        self.listaTec.column("#2", width=320)
+        self.listaTec.column("#3", width=110)
+        self.listaTec.column("#4", width=110)
+        self.listaTec.column("#5", width=85)
+
+
+        self.listaTec.place(relx=0.01, rely=0.3, relwidth=0.95, relheight=0.85)
+
+        self.scroolLista = Scrollbar(self.conTecnicos, orient='vertical')
+        self.listaTec.configure(yscrollcommand=self.scroolLista.set)
+        self.scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
+        self.listaTec.bind("<Double-1>", self.OnDoubleClick_Tecnicos)
 
 Application()
