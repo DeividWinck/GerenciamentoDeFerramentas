@@ -219,24 +219,84 @@ class FuncsTec():
         self.conn.commit(); print("Banco de dados criado - Técnicos")
         self.desconecta_bd_tecnicos()
 
-    def add_tecnico(self):
+    # def valida_cpf(self):
+    #     global cpf_list, resto1, resto2
+    #     self.cpf = self.entry_CPF.get()
+    #     cpf_list = [int(x) for x in str(self.cpf)]
+
+    #     j=10
+    #     self.cpfs= []
+    #     for i in cpf_list[0:9]:
+    #         i *= j
+    #         self.cpfs.append(i)
+    #         j -= 1
+    #     resto1 = (sum(self.cpfs)*10)%11
+    #     j=11
+    #     self.cpfs = []
+    #     for i in cpf_list[0:10]:
+    #         i *= j
+    #         self.cpfs.append(i)
+    #         j -= 1
+    #     resto2 = (sum(self.cpfs)*10)%11
+
+    def valida_cpf_resto1(self):
+        
         self.cpf = self.entry_CPF.get()
-        self.nome = self.entry_nome.get()
-        self.telefone = self.entry_telefone.get()
-        self.turno = self.entry_turno.get()
-        self.nomeEquipe = self.entry_nomeEquipe.get()
-        self.conecta_bd_tecnicos()
+        cpf_list = [int(x) for x in str(self.cpf)]
+        if len(cpf_list) == 11:
+            j=10
+            self.cpfs= []
+            for i in cpf_list[0:9]:
+                i *= j
+                self.cpfs.append(i)
+                j -= 1
+            resto = (sum(self.cpfs)*10)%11
+            return resto == cpf_list[9]
+        else:
+            self.lb_cpf_invalido.place(relx=0.30, rely=0.80)
+            return 0 ==1
 
-        self.cursor.execute(""" INSERT INTO tecnicos (cpf, nome, telefone,
-         turno, nomeEquipe)
-            VALUES (?, ?, ?, ?, ?)""", (self.cpf, self.nome, self.telefone, self.turno,
-                                                 self.nomeEquipe))
-        print(self.cpf, self.nome, self.telefone, self.turno,
-                                                 self.nomeEquipe)
-        self.conn.commit()
-        self.desconecta_bd_tecnicos()
-        self.limpar_tecnicos()
+    def valida_cpf_resto2(self):
+        
+        self.cpf = self.entry_CPF.get()
+        cpf_list = [int(x) for x in str(self.cpf)]
+        if len(cpf_list) == 11:
+            j=11
+            self.cpfs= []
+            for i in cpf_list[0:10]:
+                i *= j
+                self.cpfs.append(i)
+                j -= 1
+            resto = (sum(self.cpfs)*10)%11
+            return resto == cpf_list[10]
+        else:
+            self.lb_cpf_invalido.place(relx=0.30, rely=0.80)
+            return 0 ==1
 
+    def add_tecnico(self):
+        self.valida_cpf_resto1()
+        self.valida_cpf_resto2()
+        if self.valida_cpf_resto2() and self.valida_cpf_resto1(): 
+            self.cpf = self.entry_CPF.get()
+            self.nome = self.entry_nome.get()
+            self.telefone = self.entry_telefone.get()
+            self.turno = self.entry_turno.get()
+            self.nomeEquipe = self.entry_nomeEquipe.get()
+            self.conecta_bd_tecnicos()
+
+            self.cursor.execute(""" INSERT INTO tecnicos (cpf, nome, telefone,
+            turno, nomeEquipe)
+                VALUES (?, ?, ?, ?, ?)""", (self.cpf, self.nome, self.telefone, self.turno,
+                                                    self.nomeEquipe))
+            print(self.cpf, self.nome, self.telefone, self.turno,
+                                                    self.nomeEquipe)
+            self.conn.commit()
+            self.desconecta_bd_tecnicos()
+            self.limpar_tecnicos()
+            self.lb_cpf_invalido.place(relx=0.30, rely=100)
+
+        else:
+            self.lb_cpf_invalido.place(relx=0.30, rely=0.80)
 
     def select_lista_tecnicos(self):
         self.listaTec.delete(*self.listaTec.get_children())
@@ -593,6 +653,8 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         lb_nomeEquipe.place(relx=0.01, rely=0.40)
         self.entry_nomeEquipe = Entry(self.frame_2, fg='red', font=('verdana', 10))
         self.entry_nomeEquipe.place(relx=0.01, rely=0.46, relheight=0.04, relwidth=0.50)
+
+        self.lb_cpf_invalido = Label(self.frame_2, text="CPF Inválido!", font=('verdana', 12), bg='#ff0000')
 
 
     def consultar_tecnico(self):
