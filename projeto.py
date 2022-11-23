@@ -209,6 +209,7 @@ class FuncsTec():
         # Criar tabela
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS tecnicos (
+                codt INTEGER PRIMARY KEY,
                 cpf CHAR(11),
                 nome CHAR(40) NOT NULL,
                 telefone INTEGER(20),
@@ -239,7 +240,7 @@ class FuncsTec():
     def select_lista_tecnicos(self):
         self.listaTec.delete(*self.listaTec.get_children())
         self.conecta_bd_tecnicos()
-        lista = self.cursor.execute(""" SELECT cpf, nome, telefone, 
+        lista = self.cursor.execute(""" SELECT codt, cpf, nome, telefone, 
         turno, nomeEquipe FROM tecnicos
             """)
         for i in lista:
@@ -251,17 +252,17 @@ class FuncsTec():
         self.listaTec.selection()
 
         for n in self.listaTec.selection():
-            col1, col2, col3, col4, col5= self.listaTec.item(n, 'values')
+            col1, col2, col3, col4, col5, col6= self.listaTec.item(n, 'values')
             self.entry_CPF_consulta.insert(END, col1)
 
     def exclui_tecnico(self):
         self.CPF_consulta = self.entry_CPF_consulta.get()
         # self.variaveis_ferramenta()
         self.conecta_bd_tecnicos()
-        self.cursor.execute("""DELETE FROM tecnicos WHERE cod = ?""", (self.CPF_consulta))
+        self.cursor.execute("""DELETE FROM tecnicos WHERE codt = ?""", (self.CPF_consulta))
         self.conn.commit()
         self.desconecta_bd_tecnicos()
-        self.select_lista()
+        self.select_lista_tecnicos()
         self.entry_CPF_consulta.delete(0, END)
 
 
@@ -288,7 +289,7 @@ class Relatorios_Tecnicos(FuncsTec):
 
 
 
-        lista = self.cursor.execute(""" SELECT cpf, nome, telefone, 
+        lista = self.cursor.execute(""" SELECT codt, cpf, nome, telefone, 
         turno, nomeEquipe FROM tecnicos
             """)
         b = 20
@@ -639,21 +640,23 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
 
 
     def listaTecnicos(self):
-        self.listaTec = ttk.Treeview(self.conTecnicos, height=3, columns=("col1", "col2", "col3", "col4", "col5", "col6"))
+        self.listaTec = ttk.Treeview(self.conTecnicos, height=3, columns=("col1", "col2", "col3", "col4", "col5", "col6", "col7"))
         self.listaTec.heading("#0", text="")
-        self.listaTec.heading("#1", text="CPF")
-        self.listaTec.heading("#2", text="Turno")
-        self.listaTec.heading("#3", text="Nome Completo")
-        self.listaTec.heading("#4", text="Telefone ou Rádio")
-        self.listaTec.heading("#5", text="Nome da Equipe")
+        self.listaTec.heading("#2", text="Cod")
+        self.listaTec.heading("#2", text="CPF")
+        self.listaTec.heading("#3", text="Turno")
+        self.listaTec.heading("#4", text="Nome Completo")
+        self.listaTec.heading("#5", text="Telefone ou Rádio")
+        self.listaTec.heading("#6", text="Nome da Equipe")
 
 
         self.listaTec.column("#0", width=0)
-        self.listaTec.column("#1", width=50)
-        self.listaTec.column("#2", width=320)
-        self.listaTec.column("#3", width=110)
+        self.listaTec.column("#1", width=20)
+        self.listaTec.column("#2", width=50)
+        self.listaTec.column("#3", width=320)
         self.listaTec.column("#4", width=110)
-        self.listaTec.column("#5", width=85)
+        self.listaTec.column("#5", width=110)
+        self.listaTec.column("#6", width=85)
 
 
         self.listaTec.place(relx=0.01, rely=0.3, relwidth=0.95, relheight=0.85)
