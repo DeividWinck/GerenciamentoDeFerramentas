@@ -506,50 +506,133 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
 
         lb_titulo = Label(self.frame_2, text="Cadastrar Ferramenta", bg='#dfe3ee', font=('verdana', 14))
         lb_titulo.place(relx=0.01, rely=0.01)
+        
+        
+        
+        # var = StringVar()
+        # max_len = 5
+        # def on_write(*args):
+        #     s = var.get()
+        #     if len(s) > max_len:
+        #         var.set(s[:max_len])
+    
+        # var.trace_variable("w", on_write)   
 
         lb_codigo = Label(self.frame_2, text="Código", font=('verdana', 12), bg='#dfe3ee')
         lb_codigo.place(relx=0.01, rely=0.1)
         self.entry_codigo = Entry(self.frame_2, fg='red', font=('verdana', 10))
         self.entry_codigo.place(relx=0.01, rely=0.16, relheight=0.04, relwidth=0.14)
+        
+        var_partNumber = StringVar()
+        max_len_partNumber = 25
+        def on_write_partNumber(*args):
+            s = var_partNumber.get()
+            if len(s) > max_len_partNumber:
+                var_partNumber.set(s[:max_len_partNumber])
+    
+        var_partNumber.trace_variable("w", on_write_partNumber)   
 
         lb_partNumber = Label(self.frame_2, text="Part Number", font=('verdana', 12), bg='#dfe3ee')
         lb_partNumber.place(relx=0.20, rely=0.1)
-        self.entry_partNumber = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_partNumber = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_partNumber)
         self.entry_partNumber.place(relx=0.20, rely=0.16, relheight=0.04, relwidth=0.30)
+        
+        var_fabricante = StringVar()
+        max_len_fabricante = 30
+        def on_write_fabricante(*args):
+            s = var_fabricante.get()
+            if len(s) > max_len_fabricante:
+                var_fabricante.set(s[:max_len_fabricante])
+    
+        var_fabricante.trace_variable("w", on_write_fabricante)   
 
         lb_fabricante = Label(self.frame_2, text="Fabricante", font=('verdana', 12), bg='#dfe3ee')
         lb_fabricante.place(relx=0.55, rely=0.1)
-        self.entry_fabricante = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_fabricante = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_fabricante)
         self.entry_fabricante.place(relx=0.55, rely=0.16, relheight=0.04, relwidth=0.30)
+        
+        var_descricao = StringVar()
+        max_len_descricao = 60
+        def on_write_descricao(*args):
+            s = var_descricao.get()
+            if len(s) > max_len_descricao:
+                var_descricao.set(s[:max_len_descricao])
+    
+        var_descricao.trace_variable("w", on_write_descricao)   
 
         lb_descricao = Label(self.frame_2, text="Descrição", font=('verdana', 12), bg='#dfe3ee')
         lb_descricao.place(relx=0.01, rely=0.20)
-        self.entry_descricao = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_descricao = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_descricao)
         self.entry_descricao.place(relx=0.01, rely=0.26, relheight=0.04, relwidth=0.84)
+        
+        var_voltagem = StringVar()
+        max_len_voltagem = 15
+        def on_write_voltagem(*args):
+            s = var_voltagem.get()
+            if len(s) > max_len_voltagem:
+                var_voltagem.set(s[:max_len_voltagem])
+    
+        var_voltagem.trace_variable("w", on_write_voltagem)   
 
         lb_voltagem = Label(self.frame_2, text="Voltagem", font=('verdana', 12), bg='#dfe3ee')
         lb_voltagem.place(relx=0.01, rely=0.30)
-        self.entry_voltagem = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_voltagem = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_voltagem)
         self.entry_voltagem.place(relx=0.01, rely=0.36, relheight=0.04, relwidth=0.19)
+        
+        var_tamanho = StringVar()
+        max_len_tamanho = 20
+        def on_write_tamanho(*args):
+            s = var_tamanho.get()
+            if len(s) > max_len_tamanho:
+                var_tamanho.set(s[:max_len_tamanho])
+    
+        var_tamanho.trace_variable("w", on_write_tamanho)   
 
         lb_tamanho = Label(self.frame_2, text="Tamanho", font=('verdana', 12), bg='#dfe3ee')
         lb_tamanho.place(relx=0.25, rely=0.30)
-        self.entry_tamanho = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_tamanho = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_tamanho)
         self.entry_tamanho.place(relx=0.25, rely=0.36, relheight=0.04, relwidth=0.19)
+        
+        var_unidadeMedida = StringVar()
+        max_len_unidadeMedida = 15
+        def on_write_unidadeMedida(*args):
+            s = var_unidadeMedida.get()
+            if len(s) > max_len_unidadeMedida:
+                var_unidadeMedida.set(s[:max_len_unidadeMedida])
+    
+        var_unidadeMedida.trace_variable("w", on_write_unidadeMedida)   
 
         lb_unidadeMedida = Label(self.frame_2, text="Unidade de Medida", font=('verdana', 12), bg='#dfe3ee')
         lb_unidadeMedida.place(relx=0.49, rely=0.30)
-        self.entry_unidadeMedida = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_unidadeMedida = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_unidadeMedida)
         self.entry_unidadeMedida.place(relx=0.55, rely=0.36, relheight=0.04, relwidth=0.29)
+        
+        var_tipoFerramenta = StringVar()
+        max_len_tipoFerramenta = 15
+        def on_write_tipoFerramenta(*args):
+            s = var_tipoFerramenta.get()
+            if len(s) > max_len_tipoFerramenta:
+                var_tipoFerramenta.set(s[:max_len_tipoFerramenta])
+    
+        var_tipoFerramenta.trace_variable("w", on_write_tipoFerramenta)   
 
         lb_tipoFerramenta = Label(self.frame_2, text="Tipo da Ferramenta", font=('verdana', 12), bg='#dfe3ee')
         lb_tipoFerramenta.place(relx=0.01, rely=0.40)
-        self.entry_tipoFerramenta = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_tipoFerramenta = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_tipoFerramenta)
         self.entry_tipoFerramenta.place(relx=0.01, rely=0.46, relheight=0.04, relwidth=0.39)
+        
+        var_materialFerramenta = StringVar()
+        max_len_materialFerramenta = 5
+        def on_write_materialFerramenta(*args):
+            s = var_materialFerramenta.get()
+            if len(s) > max_len_materialFerramenta:
+                var_materialFerramenta.set(s[:max_len_materialFerramenta])
+    
+        var_materialFerramenta.trace_variable("w", on_write_materialFerramenta)   
 
         lb_materialFerramenta = Label(self.frame_2, text="Material da Ferramenta", font=('verdana', 12), bg='#dfe3ee')
         lb_materialFerramenta.place(relx=0.43, rely=0.40)
-        self.entry_materialFerramenta = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_materialFerramenta = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_materialFerramenta)
         self.entry_materialFerramenta.place(relx=0.43, rely=0.46, relheight=0.04, relwidth=0.41)
 
     def consultar_ferramentas(self):
@@ -648,15 +731,33 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         lb_CPF.place(relx=0.01, rely=0.1)
         self.entry_CPF = Entry(self.frame_2, fg='red', font=('verdana', 10))
         self.entry_CPF.place(relx=0.01, rely=0.16, relheight=0.04, relwidth=0.60)
+        
+        var_nome = StringVar()
+        max_len_nome = 40
+        def on_write_nome(*args):
+            s = var_nome.get()
+            if len(s) > max_len_nome:
+                var_nome.set(s[:max_len_nome])
+    
+        var_nome.trace_variable("w", on_write_nome)   
 
         lb_nome = Label(self.frame_2, text="Nome Completo", font=('verdana', 12), bg='#dfe3ee')
         lb_nome.place(relx=0.01, rely=0.2)
-        self.entry_nome = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_nome = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_nome)
         self.entry_nome.place(relx=0.01, rely=0.26, relheight=0.04, relwidth=0.85)
+        
+        var_telefone = StringVar()
+        max_len_telefone = 9
+        def on_write_telefone(*args):
+            s = var_telefone.get()
+            if len(s) > max_len_telefone:
+                var_telefone.set(s[:max_len_telefone])
+    
+        var_telefone.trace_variable("w", on_write_telefone) 
 
         lb_telefone = Label(self.frame_2, text="Telefone celular ou rádio", font=('verdana', 12), bg='#dfe3ee')
         lb_telefone.place(relx=0.01, rely=0.30)
-        self.entry_telefone = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_telefone = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_telefone)
         self.entry_telefone.place(relx=0.01, rely=0.36, relheight=0.04, relwidth=0.50)
 
         lb_turno = Label(self.frame_2, text="Turno", font=('verdana', 12), bg='#dfe3ee')
@@ -664,10 +765,19 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         uniTurno = ['Manhã','Tarde','Noite']
         self.entry_turno = ttk.Combobox(self.frame_2, value=uniTurno)
         self.entry_turno.place(relx=0.66, rely=0.16, relheight=0.04, relwidth=0.25)
+        
+        var_nomeEquipe = StringVar()
+        max_len_nomeEquipe = 30
+        def on_write_nomeEquipe(*args):
+            s = var_nomeEquipe.get()
+            if len(s) > max_len_nomeEquipe:
+                var_nomeEquipe.set(s[:max_len_nomeEquipe])
+    
+        var_nomeEquipe.trace_variable("w", on_write_nomeEquipe) 
 
         lb_nomeEquipe = Label(self.frame_2, text="Nome da Equipe", font=('verdana', 12), bg='#dfe3ee')
         lb_nomeEquipe.place(relx=0.01, rely=0.40)
-        self.entry_nomeEquipe = Entry(self.frame_2, fg='red', font=('verdana', 10))
+        self.entry_nomeEquipe = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_nomeEquipe)
         self.entry_nomeEquipe.place(relx=0.01, rely=0.46, relheight=0.04, relwidth=0.50)
 
         self.lb_cpf_invalido = Label(self.frame_2, text="CPF Inválido!", font=('verdana', 12), bg='#ff0000')
