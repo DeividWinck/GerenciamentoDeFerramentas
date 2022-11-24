@@ -119,8 +119,24 @@ class FuncsFerr():
         self.desconecta_bd_ferramentas()
         self.select_lista()
         self.entry_codigo_consulta.delete(0, END)
-
-
+        
+    def busca_ferramenta(self):
+        self.conecta_bd_ferramentas()
+        self.listaFerr.delete(*self.listaFerr.get_children())
+        
+        self.entry_codigo_consulta.insert(END, '%')
+        codigo = self.entry_codigo_consulta.get()
+        self.cursor.execute("""
+                            SELECT cod, descFerr, partNum, fabricante,
+                            voltagem, tamanho, uniMed, tipoFerr, matFerr 
+                            FROM ferramentas 
+                            WHERE cod LIKE '%s'
+                            """ % codigo)
+        buscaCodFerr = self.cursor.fetchall()
+        for i in buscaCodFerr:
+            self.listaFerr.insert("",END, values=i)
+        self.desconecta_bd_ferramentas()
+        self.entry_codigo_consulta.delete(0, END)
 
 class Relatorios_Ferramentas(FuncsFerr):
     
@@ -209,7 +225,7 @@ class FuncsTec():
         # Criar tabela
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS tecnicos (
-                cpf INTEGRER(11),
+                cpf CHAR(11),
                 nome CHAR(40) NOT NULL,
                 telefone INTEGER(20),
                 turno CHAR(10),
@@ -218,26 +234,6 @@ class FuncsTec():
         """)
         self.conn.commit(); print("Banco de dados criado - Técnicos")
         self.desconecta_bd_tecnicos()
-
-    # def valida_cpf(self):
-    #     global cpf_list, resto1, resto2
-    #     self.cpf = self.entry_CPF.get()
-    #     cpf_list = [int(x) for x in str(self.cpf)]
-
-    #     j=10
-    #     self.cpfs= []
-    #     for i in cpf_list[0:9]:
-    #         i *= j
-    #         self.cpfs.append(i)
-    #         j -= 1
-    #     resto1 = (sum(self.cpfs)*10)%11
-    #     j=11
-    #     self.cpfs = []
-    #     for i in cpf_list[0:10]:
-    #         i *= j
-    #         self.cpfs.append(i)
-    #         j -= 1
-    #     resto2 = (sum(self.cpfs)*10)%11
 
     def valida_cpf_resto1(self):
         
@@ -315,6 +311,8 @@ class FuncsTec():
         for n in self.listaTec.selection():
             col1, col2, col3, col4, col5= self.listaTec.item(n, 'values')
             self.entry_CPF_consulta.insert(END, col1)
+            
+        print(self.entry_CPF_consulta.get())
 
     def exclui_tecnico(self):
         self.CPF_consulta = self.entry_CPF_consulta.get()
@@ -325,6 +323,24 @@ class FuncsTec():
         self.conn.commit()
         self.desconecta_bd_tecnicos()
         self.select_lista_tecnicos()
+        self.entry_CPF_consulta.delete(0, END)
+        print(self.CPF_consulta)
+    
+    def busca_tecnico(self):
+        self.conecta_bd_tecnicos()
+        self.listaTec.delete(*self.listaTec.get_children())
+        
+        self.entry_CPF_consulta.insert(END, '%')
+        cpf = self.entry_CPF_consulta.get()
+        self.cursor.execute("""
+                            SELECT  cpf, nome, telefone, turno, nomeEquipe
+                            FROM tecnicos 
+                            WHERE cpf LIKE '%s'
+                            """ % cpf)
+        buscaCpfTec = self.cursor.fetchall()
+        for i in buscaCpfTec:
+            self.listaTec.insert("",END, values=i)
+        self.desconecta_bd_tecnicos()
         self.entry_CPF_consulta.delete(0, END)
 
 
@@ -558,12 +574,12 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
 
         lb_codigo = Label(self.conFerramentas, text="Código", font=('verdana', 12), bg='#dfe3ee')
         lb_codigo.place(relx=0.01, rely=0.1)
-        self.entry_codigo_consulta = Entry(self.conFerramentas, fg='red', font=('verdana', 10))
+        self.entry_codigo_consulta = Entry(self.conFerramentas, fg='red', font=('verdana', 10),)
         self.entry_codigo_consulta.place(relx=0.01, rely=0.16, relheight=0.04, relwidth=0.14)
 
         bt_conFerramentas = Button(self.conFerramentas, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                                          activeforeground="white",
-                                         font=('verdana', 14, 'bold'))
+                                         font=('verdana', 14, 'bold'), command=self.busca_ferramenta)
         bt_conFerramentas.place(relx=0.17, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_limpaCod = Button(self.conFerramentas, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
@@ -684,7 +700,7 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
 
         bt_conTecnicos = Button(self.conTecnicos, text='Consultar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
                                          activeforeground="white",
-                                         font=('verdana', 14, 'bold'))
+                                         font=('verdana', 14, 'bold'), command=self.busca_tecnico)
         bt_conTecnicos.place(relx=0.17, rely=0.1, relwidth=0.10, relheight=0.1)
 
         bt_limpaCod = Button(self.conTecnicos, text='Limpar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
