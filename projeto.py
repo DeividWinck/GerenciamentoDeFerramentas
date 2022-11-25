@@ -586,13 +586,14 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
     
         var_tipoFerramenta.trace_variable("w", on_write_tipoFerramenta)   
 
+
         lb_tipoFerramenta = Label(self.frame_2, text="Tipo da Ferramenta", font=('verdana', 12), bg='#dfe3ee')
         lb_tipoFerramenta.place(relx=0.01, rely=0.70)
         self.entry_tipoFerramenta = Entry(self.frame_2, fg='red', font=('verdana', 10), textvariable=var_tipoFerramenta)
         self.entry_tipoFerramenta.place(relx=0.01, rely=0.76, relheight=0.04, relwidth=0.85)
-        
+
         var_materialFerramenta = StringVar()
-        max_len_materialFerramenta = 5
+        max_len_materialFerramenta = 15
         def on_write_materialFerramenta(*args):
             s = var_materialFerramenta.get()
             if len(s) > max_len_materialFerramenta:
@@ -649,7 +650,6 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
                              activeforeground="white", command=self.geraRelatorioFerramentas, font=('verdana', 14, 'bold'))
         bt_imprime.place(relx=0.85, rely=0.1, relwidth=0.10, relheight=0.1)
 
-
     def listaFerramentas(self):
         self.listaFerr = ttk.Treeview(self.conFerramentas, height=3, columns=("col1", "col2", "col3", "col4", "col5", "col6",
                                                                        "col7", "col8", "col9", "col10"))
@@ -681,7 +681,6 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         self.listaFerr.configure(yscrollcommand=self.scroolLista.set)
         self.scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
         self.listaFerr.bind("<Double-1>", self.OnDoubleClick_Ferramentas)
-
 
     def cadastrar_tecnico(self):
         self.restaurar()
