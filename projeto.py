@@ -86,6 +86,7 @@ class FuncsFerr():
     def ferramentaCadastrada(self):
         messagebox.showinfo("AVISO", "Ferramenta cadastrada com sucesso! ")
 
+
     def select_lista(self):
         self.listaFerr.delete(*self.listaFerr.get_children())
         self.conecta_bd_ferramentas()
