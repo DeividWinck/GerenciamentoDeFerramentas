@@ -495,7 +495,8 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         bt_x.place(relx=0.96, rely=0, relwidth=0.04, relheight=0.04)
 
         bt_salvar = Button(self.frame_2, text='Salvar', bd=2, bg='#00BFFF', activebackground='#2E9AFE',
-                           activeforeground="white", command=self.add_ferramenta)
+                           activeforeground="white",
+                           command=lambda: [self.add_ferramenta(), self.ferramentaCadastrada()])
         bt_salvar.place(relx=0.01, rely=0.95, relwidth=0.85, relheight=0.05)
 
         lb_titulo = Label(self.frame_2, text="Cadastrar Ferramenta", bg='#dfe3ee', font=('verdana', 14))
