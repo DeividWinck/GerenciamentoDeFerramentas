@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from reportlab.pdfgen import canvas
 import webbrowser
 import sqlite3
+import time
 
 root = Tk()
 
@@ -80,6 +82,9 @@ class FuncsFerr():
         self.conn.commit()
         self.desconecta_bd_ferramentas()
         self.limpar_ferramentas()
+
+    def ferramentaCadastrada(self):
+        messagebox.showinfo("AVISO", "Ferramenta cadastrada com sucesso! ")
 
     def select_lista(self):
         self.listaFerr.delete(*self.listaFerr.get_children())
@@ -390,9 +395,10 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         root.mainloop()
 
     def tela(self):
+
         self.root.title("Gerenciador de tecnicos")
         self.root.configure(background='#1e3743')
-        self.root.geometry("900x600")
+        self.root.geometry("900x600+900+200")
         self.root.resizable(True, True)
         self.root.maxsize(width=1200, height=900)
         self.root.minsize(width=850, height=600)
