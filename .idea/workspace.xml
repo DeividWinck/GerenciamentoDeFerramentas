@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65e9f797-782e-43cb-ad53-f82d1240a2b5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/ferramentas.bd" beforeDir="false" afterPath="$PROJECT_DIR$/ferramentas.bd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projeto.py" beforeDir="false" afterPath="$PROJECT_DIR$/projeto.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
