@@ -469,7 +469,7 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
                                      command=self.cadastrar_tecnico)
         bt_cadastrarTecnico.place(relx=0.02, rely=0.1, relwidth=0.96, relheight=0.15)
         # Botão Consultar Técnicos
-        bt_consultarTecnicos = Button(self.frame_2, text="Consultar Técnicos", bd=4, fg='black',
+        bt_consultarTecnicos = Button(self.frame_2, text="Consultar Técnico", bd=4, fg='black',
                                       font=('verdana', 14, 'bold'),
                                       bg='#00BFFF', activebackground='#2E9AFE', activeforeground="white",
                                       command=self.consultar_tecnico)
@@ -618,7 +618,7 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         self.tela2 = Tk()
         self.tela2.title("Consultar Ferramentas")
         self.tela2.configure(background='#1e3743')
-        self.tela2.geometry("1200x700")
+        self.tela2.geometry("1200x700+700+100")
         self.tela2.resizable(True, True)
         self.tela2.maxsize(width=1800, height=900)
         self.tela2.minsize(width=900, height=600)
@@ -765,7 +765,7 @@ class Application(Relatorios_Ferramentas, Relatorios_Tecnicos):
         self.tela2 = Tk()
         self.tela2.title("Consultar Técnico")
         self.tela2.configure(background='#1e3743')
-        self.tela2.geometry("1200x700")
+        self.tela2.geometry("1200x700+700+100")
         self.tela2.resizable(True, True)
         self.tela2.maxsize(width=1800, height=900)
         self.tela2.minsize(width=900, height=600)
